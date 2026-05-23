@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Phrase.Note</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0e0e0e;
@@ -23,6 +23,12 @@
     --radius: 4px;
     --radius-lg: 6px;
   }
+  /* Chinese mode overrides accent */
+  body.lang-cn {
+    --accent: #e63946;
+    --accent-hover: #ff5762;
+    --accent-dim: rgba(230, 57, 70, 0.15);
+  }
   * { box-sizing: border-box; }
   html, body {
     margin: 0;
@@ -32,6 +38,9 @@
     -webkit-font-smoothing: antialiased;
     line-height: 1.6;
   }
+  body.lang-cn {
+    font-family: 'Inter', 'Noto Sans SC', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
   .container {
     max-width: 760px;
     margin: 0 auto;
@@ -40,7 +49,7 @@
   header {
     padding: 32px 0 24px;
     border-bottom: 2px solid var(--text);
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -61,7 +70,20 @@
     text-transform: uppercase;
     font-family: 'Inter', sans-serif;
   }
-  .logo .dot { color: var(--accent); }
+  .logo .dot { color: var(--accent); transition: color 0.2s; }
+  .lang-badge {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    padding: 4px 8px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    font-family: 'Noto Sans SC', sans-serif;
+    display: none;
+    transition: all 0.2s;
+  }
+  body.lang-cn .lang-badge { display: inline-block; }
   .word-count {
     font-size: 11px;
     font-weight: 600;
@@ -74,8 +96,42 @@
     color: var(--accent);
     font-size: 14px;
     margin: 0 2px;
+    transition: color 0.2s;
   }
   .header-actions { display: flex; gap: 6px; }
+
+  /* Language tabs */
+  .lang-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .lang-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-mute);
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    font-family: inherit;
+    border-radius: 0;
+  }
+  .lang-tab:hover {
+    color: var(--text);
+    background: transparent;
+  }
+  .lang-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
 
   button {
     font-family: inherit;
@@ -99,6 +155,9 @@
     background: var(--accent);
     color: #0e0e0e;
     border-color: var(--accent);
+  }
+  body.lang-cn button.primary {
+    color: #ffffff;
   }
   button.primary:hover {
     background: var(--accent-hover);
@@ -161,6 +220,7 @@
     right: 24px;
     height: 2px;
     background: var(--accent);
+    transition: background 0.2s;
   }
   .add-title {
     font-size: 18px;
@@ -222,7 +282,6 @@
     margin-top: 8px;
   }
 
-  /* List */
   .list-toolbar {
     display: flex;
     align-items: center;
@@ -251,7 +310,6 @@
     font-size: 14px;
   }
 
-  /* Phrase cards */
   .phrase-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -322,11 +380,7 @@
     color: var(--text);
     word-break: break-word;
   }
-  /* Markdown styles */
-  .detail-content h1,
-  .detail-content h2,
-  .detail-content h3,
-  .detail-content h4 {
+  .detail-content h1, .detail-content h2, .detail-content h3, .detail-content h4 {
     margin: 20px 0 8px;
     font-weight: 800;
     line-height: 1.3;
@@ -357,16 +411,8 @@
     line-height: 1.5;
     margin: 10px 0;
   }
-  .detail-content pre code {
-    background: transparent;
-    border: none;
-    padding: 0;
-  }
-  .detail-content ul,
-  .detail-content ol {
-    padding-left: 22px;
-    margin: 8px 0;
-  }
+  .detail-content pre code { background: transparent; border: none; padding: 0; }
+  .detail-content ul, .detail-content ol { padding-left: 22px; margin: 8px 0; }
   .detail-content li { margin: 4px 0; }
   .detail-content blockquote {
     border-left: 3px solid var(--accent);
@@ -375,11 +421,7 @@
     color: var(--text-sub);
     font-style: italic;
   }
-  .detail-content hr {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 16px 0;
-  }
+  .detail-content hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
   .detail-content a {
     color: var(--accent);
     text-decoration: underline;
@@ -396,10 +438,7 @@
     gap: 12px;
     flex-wrap: wrap;
   }
-  .detail-actions {
-    display: flex;
-    gap: 4px;
-  }
+  .detail-actions { display: flex; gap: 4px; }
   .detail-date {
     font-size: 11px;
     color: var(--text-mute);
@@ -419,10 +458,7 @@
     color: var(--text-sub);
     margin-bottom: 6px;
   }
-  .empty-sub {
-    font-size: 12px;
-    color: var(--text-mute);
-  }
+  .empty-sub { font-size: 12px; color: var(--text-mute); }
 
   .modal-overlay {
     position: fixed;
@@ -444,21 +480,9 @@
     max-width: 400px;
     width: 100%;
   }
-  .modal h3 {
-    margin: 0 0 8px;
-    font-size: 16px;
-    font-weight: 800;
-  }
-  .modal p {
-    margin: 0 0 20px;
-    font-size: 13px;
-    color: var(--text-sub);
-  }
-  .modal-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-  }
+  .modal h3 { margin: 0 0 8px; font-size: 16px; font-weight: 800; }
+  .modal p { margin: 0 0 20px; font-size: 13px; color: var(--text-sub); }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
   .modal-actions .delete-confirm {
     background: var(--danger);
     color: white;
@@ -490,12 +514,13 @@
 
   @media (max-width: 520px) {
     .container { padding: 0 16px 60px; }
-    header { padding: 24px 0 20px; margin-bottom: 24px; }
+    header { padding: 24px 0 20px; margin-bottom: 20px; }
     .logo { font-size: 24px; }
     .add-section { padding: 18px; }
     .header-actions button { padding: 8px 10px; font-size: 10px; }
     .phrase-card-header { padding: 14px 16px; }
     .phrase-card-title { font-size: 16px; }
+    .lang-tab { font-size: 12px; padding: 12px 8px; }
   }
 </style>
 </head>
@@ -505,6 +530,7 @@
   <header>
     <div class="logo-block">
       <div class="logo">Phrase<span class="dot">.</span>Note</div>
+      <div class="lang-badge">中文</div>
       <div class="word-count">Total <strong id="word-count">0</strong>phrases</div>
     </div>
     <div class="header-actions">
@@ -513,6 +539,11 @@
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
     </div>
   </header>
+
+  <div class="lang-tabs">
+    <button class="lang-tab active" data-lang="en" onclick="switchLang('en')">English</button>
+    <button class="lang-tab" data-lang="cn" onclick="switchLang('cn')">中文</button>
+  </div>
 
   <section class="add-section">
     <h2 class="add-title">Add new phrase</h2>
@@ -534,7 +565,7 @@
     </div>
   </section>
 
-  <div class="section-label">My phrases</div>
+  <div class="section-label" id="list-section-label">My phrases</div>
 
   <div class="list-toolbar">
     <div class="search-box">
@@ -560,20 +591,69 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const STORAGE_KEY = 'phrasenote_v1';
-  let phrases = loadPhrases();
+  const STORAGE_KEYS = {
+    en: 'phrasenote_en_v1',
+    cn: 'phrasenote_cn_v1'
+  };
+  const LANG_PREF_KEY = 'phrasenote_active_lang';
 
-  function loadPhrases() {
+  let activeLang = loadLangPref();
+  let phrasesByLang = {
+    en: loadPhrases('en'),
+    cn: loadPhrases('cn')
+  };
+
+  function loadLangPref() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const v = localStorage.getItem(LANG_PREF_KEY);
+      return (v === 'cn') ? 'cn' : 'en';
+    } catch { return 'en'; }
+  }
+  function saveLangPref() {
+    try { localStorage.setItem(LANG_PREF_KEY, activeLang); } catch {}
+  }
+
+  function loadPhrases(lang) {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS[lang]);
       return raw ? JSON.parse(raw) : [];
     } catch { return []; }
   }
   function savePhrases() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(phrases));
+    localStorage.setItem(STORAGE_KEYS[activeLang], JSON.stringify(phrasesByLang[activeLang]));
+  }
+  function currentPhrases() {
+    return phrasesByLang[activeLang];
   }
   function updateCount() {
-    document.getElementById('word-count').textContent = phrases.length;
+    document.getElementById('word-count').textContent = currentPhrases().length;
+  }
+
+  function switchLang(lang) {
+    if (lang !== 'en' && lang !== 'cn') return;
+    if (activeLang === lang) return;
+    activeLang = lang;
+    saveLangPref();
+    applyLangUI();
+    renderList();
+    updateCount();
+  }
+
+  function applyLangUI() {
+    document.body.classList.toggle('lang-cn', activeLang === 'cn');
+    document.querySelectorAll('.lang-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.lang === activeLang);
+    });
+    // Update placeholder text per language
+    const titleInput = document.getElementById('title-input');
+    const contentInput = document.getElementById('content-input');
+    if (activeLang === 'cn') {
+      titleInput.placeholder = '例: 「就」の使い方 / 量詞まとめ';
+      contentInput.placeholder = 'AIで調べた中国語の解説をここにペースト...';
+    } else {
+      titleInput.placeholder = '例: as if の使い方 / 同意の表現まとめ';
+      contentInput.placeholder = 'AIで調べた内容をここにペースト...';
+    }
   }
 
   function getFirstLine(text) {
@@ -597,7 +677,7 @@
       return;
     }
     const now = Date.now();
-    phrases.unshift({
+    phrasesByLang[activeLang].unshift({
       id: now + '_' + Math.random().toString(36).slice(2, 8),
       title,
       content,
@@ -617,6 +697,7 @@
 
   function renderList() {
     const filter = document.getElementById('filter-input').value.trim().toLowerCase();
+    const phrases = currentPhrases();
     let filtered = phrases;
     if (filter) {
       filtered = filtered.filter(p =>
@@ -672,7 +753,7 @@
 
   function copyPhrase(id, event) {
     if (event) event.stopPropagation();
-    const p = phrases.find(x => x.id === id);
+    const p = currentPhrases().find(x => x.id === id);
     if (!p) return;
     navigator.clipboard.writeText(p.content).then(() => {
       showToast('コピーしました');
@@ -689,7 +770,7 @@
 
   function confirmDelete(id, event) {
     if (event) event.stopPropagation();
-    const p = phrases.find(x => x.id === id);
+    const p = currentPhrases().find(x => x.id === id);
     if (!p) return;
     const hasTitle = p.title && p.title.trim().length > 0;
     const preview = (hasTitle ? p.title : getFirstLine(p.content)).slice(0, 30);
@@ -697,7 +778,7 @@
     document.getElementById('modal-message').textContent = `「${preview}${preview.length >= 30 ? '...' : ''}」を削除します。`;
     document.getElementById('modal').classList.add('show');
     document.getElementById('modal-confirm').onclick = () => {
-      phrases = phrases.filter(x => x.id !== id);
+      phrasesByLang[activeLang] = phrasesByLang[activeLang].filter(x => x.id !== id);
       savePhrases();
       renderList();
       updateCount();
@@ -714,6 +795,7 @@
   });
 
   function exportData() {
+    const phrases = currentPhrases();
     if (phrases.length === 0) {
       showToast('エクスポートするフレーズがありません');
       return;
@@ -723,7 +805,7 @@
     const a = document.createElement('a');
     const date = new Date().toISOString().slice(0, 10);
     a.href = url;
-    a.download = `phrasenote_${date}.json`;
+    a.download = `phrasenote_${activeLang}_${date}.json`;
     a.click();
     URL.revokeObjectURL(url);
     showToast('エクスポートしました');
@@ -737,9 +819,10 @@
       try {
         const imported = JSON.parse(e.target.result);
         if (!Array.isArray(imported)) throw new Error('配列形式ではありません');
-        const existingIds = new Set(phrases.map(p => p.id));
+        const existing = phrasesByLang[activeLang];
+        const existingIds = new Set(existing.map(p => p.id));
         const newOnes = imported.filter(p => p && p.content && !existingIds.has(p.id));
-        phrases = [...newOnes, ...phrases];
+        phrasesByLang[activeLang] = [...newOnes, ...existing];
         savePhrases();
         renderList();
         updateCount();
@@ -752,34 +835,33 @@
     reader.readAsText(file);
   }
 
-  // Minimal Markdown renderer
+  // Migration: if old phrasenote_v1 exists, move it to phrasenote_en_v1
+  (function migrate() {
+    try {
+      const old = localStorage.getItem('phrasenote_v1');
+      if (old && !localStorage.getItem(STORAGE_KEYS.en)) {
+        localStorage.setItem(STORAGE_KEYS.en, old);
+        phrasesByLang.en = JSON.parse(old);
+      }
+    } catch {}
+  })();
+
   function renderMarkdown(src) {
     if (!src) return '';
     let s = src;
-
     s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-    s = s.replace(/```([\s\S]*?)```/g, (m, code) => {
-      return '<pre><code>' + code.trim() + '</code></pre>';
-    });
-
+    s = s.replace(/```([\s\S]*?)```/g, (m, code) => '<pre><code>' + code.trim() + '</code></pre>');
     s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
-
     s = s.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
     s = s.replace(/^### (.+)$/gm, '<h3>$1</h3>');
     s = s.replace(/^## (.+)$/gm, '<h2>$1</h2>');
     s = s.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-
     s = s.replace(/^---+$/gm, '<hr>');
-
     s = s.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
-
     s = s.replace(/\*\*\*([^*\n]+)\*\*\*/g, '<strong><em>$1</em></strong>');
     s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
     s = s.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
-
     s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-
     s = s.replace(/(?:^\d+\.\s.+(?:\n|$))+/gm, (match) => {
       const items = match.trim().split('\n').map(line => {
         const m = line.match(/^\d+\.\s(.+)$/);
@@ -794,7 +876,6 @@
       }).join('');
       return '<ul>' + items + '</ul>';
     });
-
     const blocks = s.split(/\n\n+/);
     s = blocks.map(b => {
       const trimmed = b.trim();
@@ -802,7 +883,6 @@
       if (/^<(h[1-6]|ul|ol|pre|blockquote|hr)/.test(trimmed)) return trimmed;
       return '<p>' + trimmed.replace(/\n/g, '<br>') + '</p>';
     }).join('\n');
-
     return s;
   }
 
@@ -823,6 +903,8 @@
     showToast._t = setTimeout(() => t.classList.remove('show'), 2200);
   }
 
+  // Init
+  applyLangUI();
   renderList();
   updateCount();
 </script>
